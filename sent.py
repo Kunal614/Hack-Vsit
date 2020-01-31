@@ -24,5 +24,5 @@ for x in sentences:
 #    print(ss['pos'])
     positivity+=ss['pos']
 
-if positivity <= 3.1:
+if positivity <= 2.6:
     print("You seem to be depressed. Have a consultation!")
