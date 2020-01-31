@@ -1,47 +1,57 @@
 body{
     margin :0;
     padding 0;
-    font-family: 'Source Sans Pro', sans-serif;
-}
-
-.container-fluid{
-    width: 100%;
-    height: 100vh;
-    background-image: linear-gradient(to right, #005248, #007f59, #3dad57, #88d842, #e3ff00);
-}
-.back-upper{
-    width:100%;
-    height: 10vh;
-}
-.back-middle{
-    width:100%;
-    height: 80vh;
-}
-.back-lower{
-    width:100%;
-    height: 10vh;
-}
-.quesText{
-    text-align: center;
-    text-transform: capitalize;
-    width: 50%;
-    height:30vh;
+    font-family: 'Overpass', sans-serif;
 }
 .title{
-    width: 50%;
-    padding: 10rem 10rem;
-    background-color: #EFF033;
-    font-size: 5rem;
-    font-color : aquablue;
-    font-weight: 1000;
-    line-height: 75%;       
+		width: 100%;
+		position: absolute;
+		top:6%;
+	 	letter-spacing: 0.3rem;
+		font-weight: lighter;
+	 	font-size: 3rem;
+		text-align: center;	
 }
-.u_can_smile{
-    
+hr{
+	margin-top: -1rem;
+	width:70%;
+	text-align: center;
+	border: 0.3px solid #575B58;
 }
-.quesBtn{
-    width: 50%;
-    height: 8vh;
-    border-radius: 2rem;
-    background-color: #845EC2
+.bg-image{
+		width: 100%;
+    height: 100vh;
+    background-image: url(noah-silliman-gzhyKEo_cbU-unsplash.jpg);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		filter: blur(5px);
+}
+.ques-txt{
+	margin-top: 3rem;
+	width: 600px;
+	height: 10vh;
+	position:absolute;
+	top:50%;
+	left:50%;
+	text-align: center;
+	transform :translate(-50%,-50%);
+	font-weight: bolder;
+	font-size: 1.6rem;
+}
+button {
+	position: absolute;
+	top : 67%;
+	left: 50%;
+	transform: translate(-50%);
+  background: none;
+  border: 2px solid;
+  line-height: 1;
+  margin: 0.5em;
+  padding: 1em 2em;
+}
+
+.slide:hover,
+.slide:focus {
+  box-shadow: inset 8.5em 0 0 0 #00FF3A;
 }
