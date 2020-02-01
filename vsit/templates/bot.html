@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat with us!</title>
+    <link href="https://fonts.googleapis.com/css?family=Overpass&display=swap" rel="stylesheet">
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.41.0.min.js"></script>
+    <style language="text/css">
+        body {
+            font-family: 'Overpass', sans-serif;
+        }
+        
+        input#wisdom {
+            padding: 4px;
+            font-size: 1em;
+            width: 400px
+        }
+        
+        input::placeholder {
+            color: #ccc;
+            font-style: italic;
+        }
+        
+        p.userRequest {
+            margin: 4px;
+            padding: 4px 10px 4px 10px;
+            border-radius: 4px;
+            min-width: 50%;
+            max-width: 85%;
+            float: left;
+            background-color: #7d7;
+        }
+        
+        p.lexResponse {
+            margin: 4px;
+            padding: 4px 10px 4px 10px;
+            border-radius: 4px;
+            text-align: right;
+            min-width: 50%;
+            max-width: 85%;
+            float: right;
+            background-color: #bbf;
+            font-style: italic;
+        }
+        
+        p.lexError {
+            margin: 4px;
+            padding: 4px 10px 4px 10px;
+            border-radius: 4px;
+            text-align: right;
+            min-width: 50%;
+            max-width: 85%;
+            float: right;
+            background-color: #f77;
+        }
+        
+        .bg-image {
+            width: 100%;
+            height: 100vh;
+            background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS2if4zhCbdpb1skz-IGhaiosb1GWXsKh0x1sTHufxD-qJoi6BH");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            z-index: -1;
+        }
+        
+        input {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            transform: translate(-50%);
+            background: none;
+            border: 2px solid;
+            line-height: 1;
+            margin: 0.5em;
+            padding: 1em 2em;
+        }
+        
+        .slide:hover,
+        .slide:focus {
+            box-shadow: inset 8.5em 0 0 0 #00FF3A;
+        }
+    </style>
+
+    <body>
+        <div class="bg-image"></div>
+        <h1 style="text-align: center;
+    					position: absolute;
+    					top: 5%;
+    					left: 50%;
+    					transform: translateX(-50%)" class="top_title">Please answer the following questions</h1>
+        <p style="width: 100%;
+    					position: absolute;
+    					top: 16%;
+    					; text-align: center"> Did you know ? </p>
+        <p style="width: 100%;
+    					position: absolute;
+    					top: 20%;
+    					; text-align: center"> Women are twice as likely as men to be diagnosed with depression... </p>
+        <div id="conversation" style="width: 700px; 
+    															height: 400px;		
+    															position: absolute;
+    															top: 60%;
+    															left:50%;
+    															transform: translate(-50%, -50%);	
+    															border: 1px solid #ccc; 
+    															background-color: #eee;
+    															padding: 4px; 
+    															overflow: scroll;
+    															"></div>
+        <form id="chatform" style="margin-top: 10px" onsubmit="return pushChat();">
+            <input type="text" id="wisdom" size="80" style="position: absolute;
+       																									left: 50%;;
+        																								bottom: 10px;
+        																								transform: translateX(-50%);
+        																								box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" value="" placeholder="Please type here..">
+        </form>
+        <form action="{{url_for('validate')}}">
+            <input class="slide" type="submit" value="Proceed">
+        </form>
+
+
+
+        <script type="text/javascript">
+            // set the focus to the input box
+            document.getElementById("wisdom").focus();
+
+            // Initialize the Amazon Cognito credentials provider
+            AWS.config.region = 'us-east-1'; // Region
+            AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+                // Provide your Pool Id here
+                IdentityPoolId: "us-east-1:098aa1bf-60c8-4669-889a-941ea64aaf7b",
+            });
+
+            var lexruntime = new AWS.LexRuntime();
+            var lexUserId = 'chatbot-demo' + Date.now();
+            var sessionAttributes = {};
+
+            function pushChat() {
+
+                // if there is text to be sent...
+                var wisdomText = document.getElementById('wisdom');
+                if (wisdomText && wisdomText.value && wisdomText.value.trim().length > 0) {
+
+                    // disable input to show we're sending it
+                    var wisdom = wisdomText.value.trim();
+                    wisdomText.value = '...';
+                    wisdomText.locked = true;
+
+                    // send it to the Lex runtime
+                    var params = {
+                        botAlias: '$LATEST',
+                        botName: 'MyPoliceBot',
+                        inputText: wisdom,
+                        userId: lexUserId,
+                        sessionAttributes: sessionAttributes
+                    };
+                    showRequest(wisdom);
+                    lexruntime.postText(params, function(err, data) {
+                        if (err) {
+                            console.log(err, err.stack);
+                            showError('Error:  ' + err.message + ' (see console for details)')
+                        }
+                        if (data) {
+                            // capture the sessionAttributes for the next cycle
+                            sessionAttributes = data.sessionAttributes;
+                            // show response and/or error/dialog status
+                            showResponse(data);
+                        }
+                        // re-enable input
+                        wisdomText.value = '';
+                        wisdomText.locked = false;
+                    });
+                }
+                // we always cancel form submission
+                return false;
+            }
+
+            function showRequest(daText) {
+
+                var conversationDiv = document.getElementById('conversation');
+                var requestPara = document.createElement("P");
+                requestPara.className = 'userRequest';
+                requestPara.appendChild(document.createTextNode(daText));
+                conversationDiv.appendChild(requestPara);
+                conversationDiv.scrollTop = conversationDiv.scrollHeight;
+            }
+
+            function showError(daText) {
+
+                var conversationDiv = document.getElementById('conversation');
+                var errorPara = document.createElement("P");
+                errorPara.className = 'lexError';
+                errorPara.appendChild(document.createTextNode(daText));
+                conversationDiv.appendChild(errorPara);
+                conversationDiv.scrollTop = conversationDiv.scrollHeight;
+            }
+
+            function showResponse(lexResponse) {
+
+                var conversationDiv = document.getElementById('conversation');
+                var responsePara = document.createElement("P");
+                responsePara.className = 'lexResponse';
+                if (lexResponse.message) {
+                    responsePara.appendChild(document.createTextNode(lexResponse.message));
+                    responsePara.appendChild(document.createElement('br'));
+                }
+                if (lexResponse.dialogState === 'ReadyForFulfillment') {
+                    responsePara.appendChild(document.createTextNode(
+                        'Ready for fulfillment'));
+                    // TODO:  show slot values
+                } else {
+                    //responsePara.appendChild(document.createTextNode(
+                    //'()'));  // ' + lexResponse.dialogState + '
+                }
+                conversationDiv.appendChild(responsePara);
+                conversationDiv.scrollTop = conversationDiv.scrollHeight;
+            }
+        </script>
+
+
+
+    </body>
+
+</html>

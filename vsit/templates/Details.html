@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> Details for Psychs </title>
+    <link href="https://fonts.googleapis.com/css?family=Overpass&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            font-family: 'Overpass', sans-serif;
+        }
+        
+        .bg-image {
+            width: 100%;
+            height: 100vh;
+            background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQvrksHhYyULSPPBn_ePyGDX0nbngRl8r2-uC_zooR1rNIE4Lcv");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        .btn {
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            position: relative;
+            top: 0;
+            transition: all .3s ease-in-out;
+            -webkit-transition: all .3s ease-in-out;
+            line-height: normal;
+            font-size: 14px;
+            padding: 0.2rem 1rem;
+            padding-right: 58px;
+            text-decoration: none;
+            border: 2px solid #999;
+            color: #999;
+        }
+        
+        .btn:hover {
+            background: #999;
+            color: #fff;
+        }
+        
+        .btn--rounded {
+            border-radius: 50px;
+        }
+        
+        .btn-icon {
+            background: #999;
+            color: #fff;
+            border-radius: 50%;
+            display: block;
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            -webkit-transform: translate(0, -50%);
+            -ms-transform: translate(0, -50%);
+            -o-transform: translate(0, -50%);
+            transform: translate(0, -50%);
+            padding: 5px;
+        }
+        
+        .list {
+            position: absolute;
+            top: 6%;
+            left: 22%;
+        }
+        
+        .app-links {
+            position: absolute;
+            top: 6%;
+            left: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div class="list">
+        {%for i in range(0, 5)%}
+        <ul class="list-group">
+            <li class="list-group-item">
+                {{name[i]}} -- {{available[i]}} --
+            </li>
+        </ul>
+        {%endfor%}
+    </div>
+    <div class="app-links">
+        {%for i in range(0, 5)%}
+        <a class="btn btn--rounded" href="{{links[i]}}" title="btn action">
+            Appointment <i class="btn-icon fa fa-arrow-right"></i>
+            {%endfor%}
+    </div>
+	
+	
+	
+	
+</body>
+</html>
